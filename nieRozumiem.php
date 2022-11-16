@@ -18,5 +18,4 @@ if($user->login()) {
 }
 
 
-echo"chuj";
 ?>
