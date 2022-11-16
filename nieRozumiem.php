@@ -17,4 +17,6 @@ if($user->login()) {
     echo "Bledny login lub haslo";
 }
 
+
+echo"chuj";
 ?>
