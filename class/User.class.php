@@ -6,6 +6,7 @@ class User {
     private string $password;
     private string $firstName;
     private string $lastName;
+
     public function __construct(string $login, string $password) {
         $this->login = $login;
         $this->password = $password;
@@ -14,7 +15,6 @@ class User {
         global $db;
         $this->db = &$db;
     }
-
     public function __serialize() : array {
         return array(   
                         'id' => $this->id,
@@ -42,6 +42,7 @@ class User {
         $result = $preparedQuery->execute();
         return $result;
     }
+
     public function login() : bool {
         $query = "SELECT * FROM user WHERE login = ? LIMIT 1";
         $preparedQuery = $this->db->prepare($query); 
@@ -79,6 +80,15 @@ class User {
                 WHERE id = ?";
         $preparedQuery = $this->db->prepare($q);
         $preparedQuery->bind_param("ssi", $this->firstName, $this->lastName, $this->id);
+        return $preparedQuery->execute();
+    }
+    public function changePassword(string $newPassword) : bool {
+        $newPassword = password_hash($newPassword, PASSWORD_ARGON2I);
+        $q = "UPDATE user SET
+                password = ?
+                WHERE id = ?";
+        $preparedQuery = $this->db->prepare($q);
+        $preparedQuery->bind_param("si", $newPassword, $this->id);
         return $preparedQuery->execute();
     }
 }
